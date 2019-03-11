@@ -22,5 +22,10 @@
     <h2><a target="_blank" rel="noopener" href="https://blog.angular.io/">Angular blog</a></h2>
   </li>
 </ul>
-<button class="btn btn-info" (click)="create()">Click to create</button>
+<button class="btn btn-info" (click)="create()">Click to create new songs</button>
+<button class="btn btn-info" (click)="get()">Click to get new song</button>
+<div *ngFor="let item of listSong"><h1>{{item.name}}</h1></div>
+<button class="btn btn-info" (click)="update()">Click to update new song</button>
+<div *ngIf="newData">{{newData.name}} + {{newData.author}}</div>
+<button class="btn btn-info" (click)="delete()">Click to delete new song</button>
 <router-outlet></router-outlet>
