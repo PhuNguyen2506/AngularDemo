@@ -28,6 +28,13 @@ export class AppComponent {
     id: "5",
     publish: "02/02/2014"
   };
+
+  modelAuthor:author = {
+    knree: "phu",
+    name: "Nguyen"
+  }
+
+  // tạo trong 1 collection bình thường
   create() {
     this.collectionData.add(this.model)
     .then(function() {
@@ -38,14 +45,34 @@ export class AppComponent {
     });
   }
 
+  // tạo trong 1 subcollection
+  // thì theo quy luật, muốn tạo được cái subcollection thì phải vào bên trong document chứa nó rồi hãy add
+  createSubcollection(){
+    this.collectionData.doc('d2yJ5AAMRRpI3XNLnWjp').collection('performer').add(this.modelAuthor)
+        .then(function(){
+          console.log("Document successfully written!");
+        })
+        .catch(function(error){
+          console.log("Error writing document: ", error);
+        })
+  }
   get(){
-    this.collectionData = this.db.collection('songs');
+    this.collectionData = this.db.collection('songs').doc('d2yJ5AAMRRpI3XNLnWjp').collection('performer');
     this.collectionData.valueChanges().subscribe((res) => {
       if(res){
-        res.forEach((e) => {
-          this.listSong.push(e);
-        })
-        console.log(this.listSong);
+        console.log(res);
+      }
+    }, (err) =>{
+      console.log("error");
+    });
+  }
+
+  getSubcollection(){
+    this.documentData = this.db.collection('songs').doc('6FEt28GOG8vseMJ4cAox').collection('author').doc('2SlTN8MCzrRtV9Xr4XOY');
+    this.documentData.valueChanges().subscribe((res) => {
+      if(res){
+        
+        console.log(res);
       }
     }, (err) =>{
       console.log("error");
@@ -66,6 +93,14 @@ export class AppComponent {
     })
   }
   delete(){
+    this.db.collection('songs').doc('d2yJ5AAMRRpI3XNLnWjp').delete().then(() =>{
+      console.log("Delete Success");
+    }).catch(() => {
+      console.log("Error");
+    });
+    this.get();
+  }
+  deleteSubcollection(){
     this.db.collection('songs').doc('JlE2MyLgpyz89QscSbVm').delete().then(() =>{
       console.log("Delete Success");
     }).catch(() => {
@@ -79,4 +114,8 @@ export interface Song{
   name: string,
   id:string,
   publish: string
+}
+export interface author{
+  knree: string,
+  name: string,
 }
